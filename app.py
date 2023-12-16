@@ -9,6 +9,7 @@ from toolbox.utils import tail
 app = Flask(__name__)
 
 app.config["LOG_FILENAME"] = "activity.log"
+app.config["GPIO_PIN"] = 17
 
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -17,7 +18,6 @@ scheduler.start()
 # Setup the logger
 from logger_setup import logger
 
-GPIO_PIN = 17
 
 
 def enable_pump(milliseconds):
@@ -26,13 +26,15 @@ def enable_pump(milliseconds):
     try:
         import RPi.GPIO as GPIO
 
-        GPIO.setup(GPIO_PIN, GPIO.OUT)
+        GPIO.setmode(GPIO.BOARD)
 
-        GPIO.output(GPIO_PIN, True)
+        GPIO.setup(app.config["GPIO_PIN"], GPIO.OUT)
+
+        GPIO.output(app.config["GPIO_PIN"], True)
 
         time.sleep(milliseconds / 1000)
 
-        GPIO.output(GPIO_PIN, False)
+        GPIO.output(app.config["GPIO_PIN"], False)
 
         GPIO.cleanup()
     except ModuleNotFoundError:
