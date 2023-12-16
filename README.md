@@ -1,6 +1,6 @@
 pip install uwsgi
 
-uwsgi --ini plantwatering.ini
+/home/pi/.local./bin/uwsgi --ini plantwatering.ini
 
 Use cloudflared to make the website publicly accessible: https://pimylifeup.com/raspberry-pi-cloudflare-tunnel/
 
