@@ -23,11 +23,19 @@
     function water() {
         document.getElementById('water-button').disabled = true;
 
+
+        let milliseconds = parseInt(document.getElementById('milliseconds-input').value);
+
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "/water");
         xhr.send(JSON.stringify({
-            milliseconds: document.getElementById('milliseconds-input').value
+            milliseconds: milliseconds
         }));
+
+        // reload the page after milliseconds + 1000 to update the log & enable the button again
+        setTimeout(function () {
+            location.reload();
+        }, milliseconds + 1000);
     }
 </script>
 </body>

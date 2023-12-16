@@ -3,6 +3,7 @@ import time
 
 from flask import Flask, render_template, request, abort
 from flask_apscheduler import APScheduler
+from flask_httpauth import HTTPBasicAuth
 
 from toolbox.utils import tail
 
@@ -10,6 +11,10 @@ app = Flask(__name__)
 
 app.config["LOG_FILENAME"] = "activity.log"
 app.config["GPIO_PIN"] = 8
+app.config["USERNAME"] = "aulig"
+app.config["PASSWORD"] = "Überschwemmung"
+
+auth = HTTPBasicAuth()
 
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -18,6 +23,11 @@ scheduler.start()
 # Setup the logger
 from logger_setup import logger
 
+
+@auth.verify_password
+def verify_password(username, password):
+    if (username, password) == (app.config["USERNAME"], app.config["PASSWORD"]):
+        return username
 
 
 def enable_pump(milliseconds):
@@ -43,18 +53,21 @@ def enable_pump(milliseconds):
     logger.info("Pumping finished")
 
 
-@scheduler.task("interval", hours=1)
+# temporarily disabled
+# @scheduler.task("interval", hours=6)
 def regular_watering():
     logger.info("Watering through scheduler")
     enable_pump(5000)
 
 
 @app.route("/")
+@auth.login_required
 def index():
     return render_template("index.html", log_lines=tail(app.config["LOG_FILENAME"], lines=100))
 
 
 @app.route("/water", methods=["POST"])
+@auth.login_required
 def water():
     try:
         data = json.loads(request.data)
