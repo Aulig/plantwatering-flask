@@ -58,7 +58,7 @@ def index():
 def water():
     try:
         data = json.loads(request.data)
-        milliseconds = data["milliseconds"]
+        milliseconds = int(data["milliseconds"])
     except:
         return abort(400, description="Invalid JSON body")
 
