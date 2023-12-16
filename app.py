@@ -9,7 +9,7 @@ from toolbox.utils import tail
 app = Flask(__name__)
 
 app.config["LOG_FILENAME"] = "activity.log"
-app.config["GPIO_PIN"] = 17
+app.config["GPIO_PIN"] = 8
 
 scheduler = APScheduler()
 scheduler.init_app(app)
