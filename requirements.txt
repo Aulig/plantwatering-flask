@@ -1,0 +1,4 @@
+flask~=3.0.0
+RPi.GPIO~=0.7.0
+Flask-APScheduler~=1.13.0
+structlog~=23.2.0

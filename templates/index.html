@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PlantWatering</title>
+</head>
+<body>
+<h1>PlantWatering</h1>
+<input type="number" id="milliseconds-input">
+<label for="milliseconds-input">millis</label>
+<button id="water-button" onclick="water()">Water</button>
+
+{# autocomplete off because otherwise the browser caches and displays old log outputs unless reloading with ctrl+shift+R #}
+{# The &#10; represents a \n#}
+<textarea id="log-textarea" autocomplete="off" style="height: auto" rows="15" name="log-output" class="form-control">
+{% for log_line in log_lines %}{{ log_line }}&#10;{% endfor %}
+</textarea>
+
+<script>
+    function water() {
+        document.getElementById('water-button').disabled = true;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/water");
+        xhr.send(JSON.stringify({
+            milliseconds: document.getElementById('milliseconds-input').value
+        }));
+    }
+</script>
+</body>
+</html>
